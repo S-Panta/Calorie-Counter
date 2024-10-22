@@ -1,1 +1,1 @@
-Calorie counter created that fetch upon Gemini to calculate Calorie based on Food Intake
+Calorie counter  that fetch upon Gemini to calculate Calorie based on Food Intake and your personal information
