@@ -15,8 +15,20 @@ checkCalorieButton.addEventListener('click', function() {
         gender: document.getElementById('gender').value,
         activityFactors:document.getElementById('activity-level').value
     };
+    (async()=>{
+        
+        const data = await fetchCalorie(meals,personalInfo)
 
-    fetchCalorie(meals,personalInfo)
+        const calorieCountFromFood = data.calorieCountFromFood;
+        const requiredCalorie = data.requiredCalorie;
+        document.getElementById('calorie-from-food').textContent = calorieCountFromFood;
+        document.getElementById('required-calorie').textContent = requiredCalorie;
+        const calorieStatus = calorieCountFromFood > requiredCalorie ? 
+            'You are consuming more calories than needed.' : 
+            'You are consuming fewer calories than needed.';
+        
+        document.getElementById('calorie-status').textContent = calorieStatus;
+    })()
 
 })
 
@@ -30,12 +42,5 @@ const fetchCalorie = async (meals,personalInfo) => {
             meals,personalInfo
          }),
     });
-    console.log(await response.json())
-
-    // if (response.ok) {
-    //     const data = await response.json();
-    //     document.getElementById('response').innerText = data.response || 'No response generated.';
-    // } else {
-    //     document.getElementById('response').innerText = 'Error generating response.';
-    // }
+    return await response.json()
 }

@@ -6,6 +6,9 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 const getCalorieIntakeOutput = async (dailyFoodIntake) =>{
     let calorieCount = 0
+    if(!dailyFoodIntake){
+        return 0
+    }
     for (const dailyFood of Object.values(dailyFoodIntake)) {
         const promtToAI = "Calculate the total calorie count for the following food items: " + dailyFood + 
         " Provide a rough estimate using general assumptions. Response should ONLY include the total calorie value (a single number). Ignore any additional textual information."
@@ -19,6 +22,9 @@ const getCalorieIntakeOutput = async (dailyFoodIntake) =>{
 
 const dailyCalorieIntakeRequired = (personalInfo) => {
     let bodyMassRatio;
+    if (!personalInfo){
+        return 0
+    }
     const weight = personalInfo['weight']
     const height = personalInfo['height']
     const activityLevel = personalInfo['activityFactors']
@@ -37,10 +43,7 @@ const dailyCalorieIntakeRequired = (personalInfo) => {
         veryActive: 1.725,
         superActive: 1.9
     };
-    const activityFactor = activityFactors[activityLevel.toLowerCase()];
-    if (!activityFactor) {
-        throw new Error("Invalid activity level. Use 'sedentary', 'lightlyActive', 'moderatelyActive', 'veryActive', or 'superActive'.");
-    }
+    const activityFactor = activityFactors[activityLevel];
     const necessaryCalorieDaily = bodyMassRatio * activityFactor;
     return necessaryCalorieDaily; 
 }
@@ -49,12 +52,6 @@ const getCalorieCalculationOutput = async (dietDetail,personalInfo) => {
     const calorieCountFromFood = await getCalorieIntakeOutput(dietDetail)
     const requiredCalorie = dailyCalorieIntakeRequired(personalInfo)
     return {calorieCountFromFood,requiredCalorie}
-
-    if (calorieCountFromFood>requiredCalorie){
-        console.log("You are eating more than necessary. Required Calorie : " + requiredCalorie + " Calorie from Food : " +  calorieCountFromFood)
-    } else {
-        console.log("You are healthy. Required Calorie: " + requiredCalorie + " Calorie from Food: " +  calorieCountFromFood)
-    }
 }
 
 module.exports = { getCalorieCalculationOutput }

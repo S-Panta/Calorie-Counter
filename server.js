@@ -7,10 +7,9 @@ const {getCalorieCalculationOutput} = require('./calorieCalculator')
 app.use(cors());
 app.use(express.json())
 
-app.post('/calculate', (req, res) => {
+app.post('/calculate', async (req, res) => {
     const { meals, personalInfo } = req.body;
-    const {calorieCountFromFood,requiredCalorie}= getCalorieCalculationOutput(meals,personalInfo)
-    console.log(calorieCountFromFood,requiredCalorie)
+    const {calorieCountFromFood,requiredCalorie} = await getCalorieCalculationOutput(meals,personalInfo)
     res.status(200).json({ calorieCountFromFood, requiredCalorie })
 });
 
